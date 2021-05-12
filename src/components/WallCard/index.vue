@@ -11,7 +11,7 @@
       >
     </div>
     <div class="con_body" v-html="data.content"></div>
-    <div class="con_label">
+    <div class="con_label" v-if="data.label.length != 0">
       <el-tag
         type="success"
         size="small"
@@ -72,10 +72,16 @@ export default {
 <style lang="scss" scope>
 .wall_card {
   width: 48%;
+  height: fit-content;
   margin-bottom: 10px;
   .from_address {
     float: right;
     padding: 3px 0;
+  }
+  .el-card__body {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
   }
   .con_body {
     margin-bottom: 5px;

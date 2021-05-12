@@ -123,6 +123,8 @@ export default {
   .content-box {
     display: flex;
     flex-wrap: wrap;
+    flex-direction: row;
+    align-items: center;
     justify-content: space-around;
   }
   .pages {

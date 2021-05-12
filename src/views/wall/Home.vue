@@ -3,7 +3,7 @@
     <div class="top">
       <el-carousel :interval="4000" height="200px">
         <el-carousel-item v-for="(item, index) in carousels" :key="index">
-          <el-image :src="item.img" fit="contain"></el-image>
+          <el-image :src="item.img" fit="cover"></el-image>
         </el-carousel-item>
       </el-carousel>
     </div>
@@ -48,10 +48,17 @@ export default {
   },
   methods: {
     fetch(){
+      let list = sessionStorage.getItem("indexList")
+      // console.log('[ list ] >', list)
+      if (list != null) {
+        this.wallList = JSON.parse(list)
+        return
+      }
       wallNewList().then(res => {
         // console.log('[ res ] >', res)
         if(res.code === 20000) {
           this.wallList = res.data;
+          sessionStorage.setItem("indexList",JSON.stringify(res.data))
         }
       }).catch(()=>{})
     }
@@ -64,6 +71,7 @@ export default {
   padding: 2rem 0;
   .el-image {
     width: 100%;
+    height: 100%;
   }
 }
 .mainc {
@@ -73,6 +81,8 @@ export default {
   .content-box {
     display: flex;
     flex-wrap: wrap;
+    flex-direction: row;
+    align-items: center;
     justify-content: space-around;
   }
 }

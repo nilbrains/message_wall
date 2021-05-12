@@ -91,9 +91,10 @@ export default {
       }
       upData.user = this.uid;
       createWall(upData).then((res) => {
-        console.log(res)
+        // console.log(res)
         if (res.code === 20000) {
           this.$message.success(res.message)
+          this.$router.go(-1);
         }
       }).catch(()=>{
       })
