@@ -1,7 +1,6 @@
 import router from './router'
-import store from './store'
-import { Message } from 'element-ui'
 import { getToken } from '@/plugins/auth' 
+import store from './store';
 
 // NProgress.configure({ showSpinner: false }) // NProgress Configuration
 const title = '一言于心';  
@@ -23,6 +22,7 @@ router.beforeEach(async(to, from, next) => {
   // determine whether the user has logged in
   const hasToken = getToken()
 
+
   if (hasToken) {
     if (to.path === '/login') {
       // if is logged in, redirect to the home page
@@ -32,18 +32,15 @@ router.beforeEach(async(to, from, next) => {
       const hasGetUserInfo = store.getters.name
       if (hasGetUserInfo) {
         next()
-        // console.log("hasGetUserInfo ....... true");
+        console.log("hasGetUserInfo ....... true");
       } else {
-        // console.log("hasGetUserInfo ....... false");
+        console.log("hasGetUserInfo ....... false");
         try {
           await store.dispatch('user/getInfo')
           next()
         } catch (error) {
-          // remove token and go to login page to re-login
-          await store.dispatch('user/resetToken')
-          Message.error(error || 'Has Error')
-          next(`/login?redirect=${to.path}`)
-          // NProgress.done()
+          console.log();
+          next()
         }
       }
     }
@@ -52,7 +49,7 @@ router.beforeEach(async(to, from, next) => {
     if (!to.meta.needLogin) {
       next()
     } else {
-      next(`/login?redirect=${to.path}`)
+      document.location = (`http://auth.nilbrains.com/#/login?callback=${document.location}`)
       // NProgress.done()
     }
   }

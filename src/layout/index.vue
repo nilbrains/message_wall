@@ -26,17 +26,16 @@
               <router-link to="/add">
                 <el-dropdown-item> 添加留言 </el-dropdown-item>
               </router-link>
+              <a href="http://auth.nilbrains.com" target="_black">
+                <el-dropdown-item> 个人中心 </el-dropdown-item></a
+              >
               <el-dropdown-item divided @click.native="logout">
                 <span style="display: block">退出</span>
               </el-dropdown-item>
             </el-dropdown-menu>
           </el-dropdown>
           <span v-else>
-            <router-link type="text" :to="`/login?redirect=${this.$route.path}`"
-              >登录</router-link
-            >
-            /
-            <router-link type="text" to="/reg">注册</router-link>
+            <a type="text" :href="`http://auth.nilbrains.com/#/login?callback=${calllpath}`">登录</a>
           </span>
         </div>
       </div>
@@ -47,12 +46,16 @@
       </transition>
     </section>
     <el-footer>
-      <div class="container footer" >
+      <div class="container footer">
         <div class="">
-           <a href="https://support.qq.com/product/325310" target="_blank"> 我要反馈 </a> 
+          <a href="https://support.qq.com/product/325310" target="_blank">
+            我要反馈
+          </a>
         </div>
         <div>
-           <a href="http://beian.miit.gov.cn/" target="_blank"><i class="iconfont icon-beian"></i> 浙ICP备20019719号-1</a> 
+          <a href="http://beian.miit.gov.cn/" target="_blank"
+            ><i class="iconfont icon-beian"></i> 浙ICP备20019719号-1</a
+          >
         </div>
         <div class="">
           <span>@2020-2021 </span>
@@ -60,7 +63,7 @@
         </div>
       </div>
     </el-footer>
-    
+
     <el-backtop :bottom="100">
       <div
         style="
@@ -82,16 +85,21 @@
   </div>
 </template>
 
-<script>  
-import { mapGetters } from 'vuex'
+<script>
+import { mapGetters } from "vuex";
 import logo from "@/assets/logo.png";
+import { removeToken } from "@/plugins/auth";
+import store from '@/store';
 export default {
   name: "AppMain",
   computed: {
-    ...mapGetters(['avatar', 'islogin', 'name', 'uid']),
+    ...mapGetters(["avatar", "islogin", "name", "uid"]),
     key() {
       return this.$route.path;
     },
+    calllpath() {
+      return document.location;
+    }
   },
   data() {
     return {
@@ -101,8 +109,9 @@ export default {
   },
   methods: {
     logout() {
-      this.$store.dispatch('user/logout')
-      this.$router.push(`/redirect${this.$route.fullPath}`)
+      removeToken();
+      store.dispatch("logout")
+      location.reload();
     },
   },
 };

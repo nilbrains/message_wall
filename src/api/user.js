@@ -1,18 +1,12 @@
+import { getToken } from '@/plugins/auth'
 import request from '@/plugins/axios'
 
-export function createUser(data) {
+export function userinfo() {
   return request({
-    url: '/wall/user/reg',
-    method: 'post',
-    data
-  })
-}
-
-
-export function login(data) {
-  return request({
-    url: '/wall/user/login',
-    method: 'post',
-    data
+    url: '/auth/user/info',
+    method: 'get',
+    headers: {
+      token: getToken()
+    }
   })
 }

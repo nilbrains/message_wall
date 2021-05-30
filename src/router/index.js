@@ -8,16 +8,6 @@ import Layout from '@/layout'
 
 const routes = [
   {
-    path: '/login',
-    component: () => import('@/views/login/index'),
-    meta: { needLogin: false }
-  },
-  {
-    path: '/reg',
-    component: () => import('@/views/login/reg'),
-    meta: { needLogin: false }
-  },
-  {
     path: '/404',
     component: () => import('@/views/404'),
     meta: { needLogin: false }
@@ -45,25 +35,25 @@ const routes = [
         path: 'home',
         name: 'home',
         component: () => import('@/views/wall/Home'),
-        meta: { title: '首页', icon: 'dashboard' }
+        meta: { title: '首页', icon: 'dashboard' ,needLogin: false }
       },
       {
         path: 'add',
         name: 'add',
         component: () => import('@/views/wall/Add'),
-        meta: { title: '添加留言', icon: 'dashboard' }
+        meta: { title: '添加留言', icon: 'dashboard' ,needLogin: false }
       },
       {
         path: 'wall',
         name: 'wall',
         component: () => import('@/views/wall/Wall'),
-        meta: { title: '留言墙', icon: 'dashboard' }
+        meta: { title: '留言墙', icon: 'dashboard',needLogin: true  }
       },
       {
         path: 'about',
         name: 'about',
         component: () => import('@/views/wall/About'),
-        meta: { title: '关于', icon: 'dashboard' }
+        meta: { title: '关于', icon: 'dashboard',needLogin: false  }
       }
     ]
   },
