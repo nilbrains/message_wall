@@ -1,0 +1,95 @@
+
+body{
+  margin: 0;
+  padding: 0;
+}
+
+// 等级
+.m-level {
+  display: inline-block;
+  width: 28px;
+  height: 16px;
+  margin-right: 5px;
+  vertical-align: middle;
+  background-image: url(//s1.hdslb.com/bfs/static/jinkela/space/asserts/level.png);
+  background-repeat: no-repeat;
+  background-position: 999px 999px
+}
+
+.m-level[lvl="0"] {
+  background-position: -21px -10px
+}
+
+.m-level[lvl="1"] {
+  background-position: -21px -46px
+}
+
+.m-level[lvl="2"] {
+  background-position: -21px -82px
+}
+
+.m-level[lvl="3"] {
+  background-position: -21px -118px
+}
+
+.m-level[lvl="4"] {
+  background-position: -21px -154px;
+}
+
+.m-level[lvl="5"] {
+  background-position: -21px -190px
+}
+
+.m-level[lvl="6"] {
+  background-position: -21px -226px
+}
+
+[vip="0"]{
+  color: #222;
+}
+[vip="1"]{
+  color: #ff4400;
+}
+
+
+// error
+.error_page {
+  margin-bottom: 0!important;
+}
+.full-height {
+  height: 100vh;
+}
+
+.flex-center {
+  align-items: center;
+  display: flex;
+  justify-content: center;
+}
+
+.position-ref {
+  position: relative;
+}
+
+.error_code {
+  border-right: 2px solid;
+  font-size: 26px;
+  padding: 0 15px 0 15px;
+  text-align: center;
+  color: #636b6f;
+  font-weight: 100;
+  font-family: 'Nunito', sans-serif;
+}
+
+.error_message {
+  font-size: 18px;
+  text-align: center;
+  color: #636b6f;
+  font-weight: 100;
+  font-family: 'Nunito', sans-serif;
+}
+
+.pics {
+  .var-image {
+    width: 90%;
+  }
+}

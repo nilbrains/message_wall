@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+
+<head>
+  <meta charset="UTF-8" />
+  <link rel="icon" href="/favicon.ico" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="小想法-在这里留下想给他、她、它，说的话">
+  <meta name="keywords" content="小想法,想法,key,留言墙,NilBrains">
+  <meta property="og:title" content="小想法">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://app.nilbrains.com/wall"> 
+  <meta property="og:image" content="/favicon.ico">
+  <meta name="format-detection" content="telephone=no">
+  <title>小想法</title>
+  <style>
+    @keyframes swing {
+      20% {
+        -webkit-transform: rotate(15deg);
+        transform: rotate(15deg)
+      }
+
+      40% {
+        -webkit-transform: rotate(-10deg);
+        transform: rotate(-10deg)
+      }
+
+      60% {
+        -webkit-transform: rotate(5deg);
+        transform: rotate(5deg)
+      }
+
+      80% {
+        -webkit-transform: rotate(-5deg);
+        transform: rotate(-5deg)
+      }
+
+      to {
+        -webkit-transform: rotate(0deg);
+        transform: rotate(0deg)
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <div id="login_view"
+    style="height:90vh;display: flex;flex-direction: column;justify-content: center;align-items: center;">
+    <img src="/src/assets/loading.gif" alt="加载中">
+    <span style="animation: swing 2s infinite;">正在努力盘页面中....</span>
+  </div>
+  <div id="app" style="display: none;"></div>
+  <script type="module" src="/src/main.js"></script>
+</body>
+
+</html>
