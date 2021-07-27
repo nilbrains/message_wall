@@ -81,7 +81,7 @@ export default {
           // console.log("[ res ] >", res);
           if (res.code === 20000) {
             this.wallList = res.data.list;
-            this.page.cur = res.data.cur_page;
+            this.page.cur = +res.data.cur_page;
             this.page.count = res.data.count;
           }
         })

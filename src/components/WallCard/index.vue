@@ -28,7 +28,7 @@
       <span class="who"
         ><i class="iconfont icon-user_pre"></i> {{ data.nickname }}</span
       >
-      <span class="star" @click="starMess(data.id)"
+      <span class="star"
         ><i class="iconfont icon-star" :class="data.stars == 0 ? '' :'red_color'"></i> {{ data.stars }}</span
       >
     </div>

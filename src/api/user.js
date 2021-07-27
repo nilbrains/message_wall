@@ -10,3 +10,11 @@ export function userinfo() {
     }
   })
 }
+
+export function loginUser(data) {
+  return request({
+    url: '/auth/user/login',
+    method: 'post',
+    data
+  })
+}

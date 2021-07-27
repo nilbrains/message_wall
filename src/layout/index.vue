@@ -35,7 +35,7 @@
             </el-dropdown-menu>
           </el-dropdown>
           <span v-else>
-            <a type="text" :href="`http://auth.nilbrains.com/#/login?callback=${calllpath}`">登录</a>
+            <a type="text" @click="loginDialogVisible = true">登录</a>
           </span>
         </div>
       </div>
@@ -64,6 +64,39 @@
       </div>
     </el-footer>
 
+    <el-dialog
+      title="登录"
+      :visible.sync="loginDialogVisible"
+      custom-class="loginForm"
+      center
+    >
+      <el-form
+        :model="loginForm"
+        :rules="loginRules"
+        ref="loginForm"
+        label-position="top"
+      >
+        <el-form-item prop="email">
+          <el-input v-model="loginForm.email" placeholder="邮箱"></el-input>
+        </el-form-item>
+        <el-form-item prop="password">
+          <el-input
+            v-model="loginForm.password"
+            type="password"
+            placeholder="密码"
+          ></el-input>
+        </el-form-item>
+        <el-form-item>
+          <el-button
+            class="login_btn"
+            type="primary"
+            @click="login('loginForm')"
+            >登录</el-button
+          >
+        </el-form-item>
+      </el-form>
+    </el-dialog>
+
     <el-backtop :bottom="100">
       <div
         style="
@@ -88,8 +121,9 @@
 <script>
 import { mapGetters } from "vuex";
 import logo from "@/assets/logo.png";
-import { removeToken } from "@/plugins/auth";
-import store from '@/store';
+import { removeToken, setToken } from "@/plugins/auth";
+import store from "@/store";
+import { loginUser } from '@/api/user';
 export default {
   name: "AppMain",
   computed: {
@@ -99,24 +133,100 @@ export default {
     },
     calllpath() {
       return document.location;
-    }
+    },
   },
   data() {
+    const emailRo =
+      /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+
+    const validateAccount = (rule, value, callback) => {
+      if (!value) {
+        callback(new Error("账号不能为空"));
+      } else if (!emailRo.test(value)) {
+        callback(new Error("邮箱不规范"));
+      } else {
+        callback();
+      }
+    };
+    const validatePasswordLo = (rule, value, callback) => {
+      if (value.length < 6) {
+        callback(new Error("密码至少6位"));
+      } else {
+        callback();
+      }
+    };
     return {
+      loginForm: {
+        email: "",
+        password: "",
+      },
+      loginRules: {
+        email: [
+          { required: true, trigger: "blur", validator: validateAccount },
+        ],
+        password: [
+          { required: true, trigger: "blur", validator: validatePasswordLo },
+        ],
+      },
+      loginDialogVisible: false,
       searchKey: "",
       logo: logo,
     };
   },
   methods: {
+    login(formName) {
+      
+    // console.log('[ callback ] >', this.callback)
+      this.$refs[formName].validate((valid) => {
+        if (valid) {
+          let data = {};
+          data.email = this.loginForm.email;
+          data.password = (this.loginForm.password);
+          data.app = "well"
+          loginUser(data)
+            .then((res) => {
+              // console.log("[ res ] >", res);
+              if (res.success) {
+                setToken(res.data);
+                // console.log('[ res.data ] >', res.data)
+                this.loginDialogVisible = false
+                location.reload();
+              }
+            })
+            .catch(() => {});
+        } else {
+          return false;
+        }
+      });
+    },
     logout() {
       removeToken();
-      store.dispatch("logout")
+      store.dispatch("logout");
       location.reload();
     },
   },
 };
 </script>
+<style lang="scss">
+
+.loginForm {
+  width: 30%!important;
+}
+@media (max-width: 979px)  {
+  .loginForm {
+  width: 70%!important;
+  }
+}
+@media (max-width: 767px) {
+  .loginForm {
+  width: 90% !important;
+  }
+}
+
+</style>
 <style scoped>
+
+
 .footer {
   text-align: center;
   padding: 20px;

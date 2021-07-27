@@ -1,6 +1,7 @@
 import router from './router'
 import { getToken } from '@/plugins/auth' 
 import store from './store';
+import { Message } from 'element-ui';
 
 // NProgress.configure({ showSpinner: false }) // NProgress Configuration
 const title = '一言于心';  
@@ -32,9 +33,9 @@ router.beforeEach(async(to, from, next) => {
       const hasGetUserInfo = store.getters.name
       if (hasGetUserInfo) {
         next()
-        console.log("hasGetUserInfo ....... true");
+        // console.log("hasGetUserInfo ....... true");
       } else {
-        console.log("hasGetUserInfo ....... false");
+        // console.log("hasGetUserInfo ....... false");
         try {
           await store.dispatch('user/getInfo')
           next()
@@ -49,7 +50,9 @@ router.beforeEach(async(to, from, next) => {
     if (!to.meta.needLogin) {
       next()
     } else {
-      document.location = (`http://auth.nilbrains.com/#/login?callback=${document.location}`)
+      // document.location = (`http://auth.nilbrains.com/#/login?callback=${document.location}`)
+      Message("请先登录")
+      router.push('/home')
       // NProgress.done()
     }
   }

@@ -10,8 +10,6 @@ const service = axios.create({
   timeout: 5000 // request timeout
 })
 
-
-
 let loading = null // 定义loading变量
 // 开始 加载loading
 const startLoading = () => {

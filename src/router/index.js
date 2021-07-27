@@ -41,13 +41,13 @@ const routes = [
         path: 'add',
         name: 'add',
         component: () => import('@/views/wall/Add'),
-        meta: { title: '添加留言', icon: 'dashboard' ,needLogin: false }
+        meta: { title: '添加留言', icon: 'dashboard' ,needLogin: true }
       },
       {
         path: 'wall',
         name: 'wall',
         component: () => import('@/views/wall/Wall'),
-        meta: { title: '留言墙', icon: 'dashboard',needLogin: true  }
+        meta: { title: '留言墙', icon: 'dashboard',needLogin: false  }
       },
       {
         path: 'about',
