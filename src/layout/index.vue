@@ -17,9 +17,10 @@
     </div>
     <section class="main">
       <router-view v-slot="{ Component }">
-        <keep-alive>
+        <keep-alive v-if="keep">
           <component :is="Component" />
         </keep-alive>
+         <component v-else :is="Component" />
       </router-view>
     </section>
     <the-bom-bar v-if="bar" />
@@ -31,6 +32,9 @@ import TheBomBar from "@/components/TheBomBar.vue";
 export default {
   components: { TheBomBar },
   computed: {
+    keep() {
+      return this.$route.meta.keep || false;
+    },
     bar() {
       return this.$route.meta.bar || false;
     },
@@ -41,7 +45,7 @@ export default {
       return this.$route.path;
     },
     title() {
-      return this.$route.meta.title;
+      return this.$route.meta.title || this.$route.query.t || '';
     },
   },
   mounted() {

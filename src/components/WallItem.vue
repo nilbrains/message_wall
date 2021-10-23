@@ -7,56 +7,43 @@
           height="40px"
           fit="cover"
           radius="50%"
-          :src="data.head"
+          :src="data.user.head"
         />
-        <span class="name" :vip="data.vip">{{ data.nickname }}</span>
-        <span class="m-level" :lvl="data.level || 0"></span>
+        <span class="name" :vip="data.user.isVip">{{ data.user.name }}</span>
+        <span class="m-level" :lvl="data.user.level || 0"></span>
       </div>
       <div class="option">
-        <var-icon name="dots-vertical" />
+        <slot name="menu" :mid="data.mid" :menu="menu"></slot>
       </div>
     </div>
     <div class="content-box">
       <div class="texts">
         {{ data.content }}
       </div>
-      <div v-if="data.pic_type == 'pic' && data.pic" class="pics">
-        <var-image lazy :src="`${IMAGE_URL_HEADER}${data.pic}`" :radius="10" :loading="loadingPIC" />
+      <div v-if="data.fileType == '1' && data.file" class="pics">
+        <var-image
+          lazy
+          :src="`${data.file}`"
+          :radius="10"
+          :loading="loadingPIC"
+        />
       </div>
-      <div v-if="data.pic_type == 'bv' && data.pic" class="pics">
+      <!-- <div v-if="data.pic_type == 'bv' && data.pic" class="pics">
         <var-image lazy :src="`${BV_IMG_URL_HEADER}${data.pic}`" :radius="10" :loading="loadingPIC" />
-      </div>
+      </div> -->
     </div>
     <div class="meta-box">
       <div class="time">{{ time }}</div>
-      <div class="labels" v-if="data.label.length != 0">
+      <div class="labels" v-if="data.label">
         <var-chip type="info" plain size="small"
           >{{ data.label }}
           <template #left> <var-icon name="radio-marked" /> </template
         ></var-chip>
       </div>
-      <div class="types">
-        <var-chip
-          v-if="data.address"
-          type="info"
-          plain
-          size="small"
-          text-color="#888"
-        >
-          {{ data.address }}
-          <template #left>
-            <var-icon name="map-marker" />
-          </template>
-        </var-chip>
-        <var-chip v-if="data.pic_type == 'bv'" type="info" plain size="small">
-          哔哩哔哩
-        </var-chip>
-      </div>
     </div>
     <div class="option-box">
       <span class="item">
-        <span class="heart-num">{{ data.stars }}</span>
-        <var-icon color="#ff4400" :name="starName" @click="star" />
+        <var-badge v-if="data.isTop == '1'" type="danger" value="置顶" />
       </span>
 
       <span class="item">
@@ -69,9 +56,8 @@
 <script>
 import { timeFormat } from "@/plugins/filter";
 import { IMAGE_URL_HEADER, BV_IMG_URL_HEADER } from "@/config";
-import { starMessage } from "@/api/wall";
 import { Snackbar } from "@varlet/ui";
-import loadingPIC from '@/assets/loading.gif';
+import loadingPIC from "@/assets/loading.gif";
 export default {
   name: "wall-item",
   props: {
@@ -82,24 +68,26 @@ export default {
   },
   computed: {
     time() {
-      return timeFormat(this.data.publish_date);
+      return timeFormat(this.data.publishData);
     },
     isLike() {
       const likes = localStorage.getItem("likes") || "likes";
-      return likes.includes(this.data.id);
+      return likes.includes(this.data.mid);
     },
     isStar() {
       const stars = sessionStorage.getItem("stars") || [];
-      return stars.includes(this.data.id);
+      return stars.includes(this.data.mid);
     },
   },
   data() {
     return {
+      menu: false,
       loadingPIC,
       IMAGE_URL_HEADER,
       BV_IMG_URL_HEADER,
       starName: "heart-outline",
       likeName: "star-outline",
+      userinfo: this.$store.getters.getUserinfo,
     };
   },
   mounted() {
@@ -111,46 +99,41 @@ export default {
       let likes = localStorage.getItem("likes") || "likes";
       let likewalls = localStorage.getItem("likewalls") || "[]";
       likewalls = JSON.parse(likewalls);
-      if (likes.includes(this.data.id)) {
+      if (likes.includes(this.data.mid)) {
         likes = likes.split(",");
-        likes = likes.filter((item) => item != this.data.id);
-        likewalls = likewalls.filter((item) => item.id != this.data.id);
+        likes = likes.filter((item) => item != this.data.mid);
+        likewalls = likewalls.filter((item) => item.mid != this.data.mid);
         localStorage.setItem("likewalls", JSON.stringify(likewalls));
         localStorage.setItem("likes", likes);
         this.likeName = "star-outline";
         return;
       }
 
-      if (likewalls.length >= 3) {
+      if (likewalls.length >= 10) {
         Snackbar.warning("收藏达到上限啦");
         return;
       }
       likes = likes.split(",");
-      likes.push(this.data.id);
+      likes.push(this.data.mid);
       likewalls.push(this.data);
       localStorage.setItem("likes", likes);
       localStorage.setItem("likewalls", JSON.stringify(likewalls));
       this.likeName = "star";
     },
-    star() {
-      let stars = sessionStorage.getItem("stars") || "stars";
-      if (stars.includes(this.data.id)) {
-        return;
-      }
-      starMessage(this.data.user, this.data.id).then((res) => {
-        if (res.success) {
-          stars = stars.split(",");
-          // console.log("[ stars ] >", stars);
-          stars.push(this.data.id);
-          sessionStorage.setItem("stars", stars);
-          this.starName = "heart";
-          this.data.stars++;
-        }
-      });
-    },
   },
 };
 </script>
+
+<style lang="scss">
+.wall-item {
+  .pics {
+    .var-image__image {
+      min-width: 50%;
+      max-width: 80%;
+    }
+  }
+}
+</style>
 
 <style lang="scss" scoped>
 $padding: 0.8em;

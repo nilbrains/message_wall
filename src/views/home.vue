@@ -28,16 +28,32 @@
         </var-tabs>
       </div>
       <div class="bon_con">
-        <var-list
-          loading-text="正在努力输出"
-          finished-text="一滴都没有了"
-          error-text="出错了出错了"
-          :finished="finished"
-          v-model:loading="loading"
-          @load="load"
-        >
-          <wall-item :data="item" :key="index" v-for="(item, index) in walls" />
-        </var-list>
+        <var-tabs-items v-model:active="activeNav" :can-swipe="false">
+          <var-tab-item name="new">
+            <var-list
+              loading-text="正在努力输出"
+              finished-text="一滴都没有了"
+              error-text="出错了出错了"
+              :finished="finished"
+              v-model:loading="loading"
+              @load="load"
+            >
+              <wall-item
+                :data="item"
+                :key="index"
+                v-for="(item, index) in walls"
+              />
+            </var-list>
+          </var-tab-item>
+          <var-tab-item name="all">
+            <div class="labels_box">
+              <div class="label" v-for="item,index in labels" :key="`l${index}`" v-ripple @click="$router.push(`/wall/l/${item.lid}?t=${item.name}`)">
+                <var-icon :name="item.icon" :size="32" />
+                <div class="name">{{item.name}}</div>
+              </div>
+            </div>
+          </var-tab-item>
+        </var-tabs-items>
       </div>
     </div>
   </div>
@@ -45,7 +61,7 @@
 
 <script>
 import WallItem from "@/components/WallItem.vue";
-import { wallList } from "@/api/wall.js";
+import { labelList, wallList } from "@/api/wall.js";
 export default {
   components: {
     WallItem,
@@ -62,12 +78,8 @@ export default {
           text: "最新",
         },
         {
-          type: "hot",
-          text: "最热",
-        },
-        {
-          type: "ran",
-          text: "全部",
+          type: "all",
+          text: "广场",
         },
       ],
       swipes: [
@@ -75,27 +87,33 @@ export default {
         "https://cdn.jsdelivr.net/gh/nilbrains/nil/images/2021/wall/banner-two.jpg",
       ],
       walls: [],
+      labels: []
     };
   },
   methods: {
     changeNav(active) {
       // console.log("[ active ] >", active);
-      (this.page = 1), (this.loading = false);
-      this.finished = false;
-      this.walls = [];
-      this.load();
+      this.$router.push({query: { active }})
     },
     load() {
       this.initData();
+      this.initLabels()
+    },
+    initLabels() {
+     labelList().then((res) => {
+        if (res.success) {
+          this.labels = res.data;
+        }
+      });
     },
     initData() {
-      wallList(this.activeNav, this.page).then((res) => {
-        // console.log("[ res ] >", res);
+      wallList(this.page).then((res) => {
+        console.log("[ res ] >", res);
         this.loading = false;
         if (res.success) {
           this.page++;
-          this.walls.push(...res.data.list);
-          if (res.data.list.length == 0) {
+          this.walls.push(...res.data.records);
+          if (res.data.records.length == 0) {
             this.finished = true;
           }
         }
@@ -103,7 +121,7 @@ export default {
     },
   },
   mounted() {
-    // this.initData();
+    // this.changeNav = this.$route.query.active
   },
 };
 </script>
@@ -117,5 +135,21 @@ export default {
   width: 100%;
   height: 100%;
   object-fit: cover;
+}
+.labels_box {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-evenly;
+  margin-top: 0.8em;
+  .label {
+    flex-basis: 30%;
+    text-align: center;
+    box-sizing: border-box;
+    padding: .2em;
+    margin-bottom: .3em;
+    .name {
+      margin-top: 0.4em;
+    }
+  }
 }
 </style>

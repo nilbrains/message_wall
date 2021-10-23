@@ -1,9 +1,6 @@
 <template>
   <div class="me">
-    <div
-      class="user-card var-elevation--4"
-      v-lazy:background-image="bg"
-    >
+    <div class="user-card var-elevation--4" v-lazy:background-image="bg">
       <var-image
         width="60px"
         height="60px"
@@ -59,7 +56,11 @@
                 :data="item"
                 :key="index"
                 v-for="(item, index) in userwalls"
-              />
+              >
+                <template #menu="data">
+                  <var-icon name="trash-can" @click="deletedTo(data)" />
+                </template>
+              </wall-item>
             </var-list>
             <empty
               v-if="userwalls.length == 0 && !isRefresh"
@@ -85,20 +86,22 @@
 <script>
 import WallItem from "@/components/WallItem.vue";
 import Empty from "@/components/Empty.vue";
-import { wallUserList } from "@/api/wall";
+import { deleteMess, wallUserList } from "@/api/wall";
 import { mapState } from "vuex";
+import { Snackbar } from "@varlet/ui";
 export default {
   components: { WallItem, Empty },
   name: "me",
   data() {
     return {
+      menu: false,
       finished: false,
       isRefresh: false,
       activeNavs: 0,
       likewalls: [],
       userwalls: [],
       page: 1,
-      bg:"https://varlet.gitee.io/varlet-ui/cat.jpg"
+      bg: "https://varlet.gitee.io/varlet-ui/cat.jpg",
     };
   },
   computed: {
@@ -106,7 +109,9 @@ export default {
   },
   mounted() {
     this.likewalls = JSON.parse(localStorage.getItem("likewalls")) || [];
-    this.bg = localStorage.getItem("userbg") || 'https://varlet.gitee.io/varlet-ui/cat.jpg';
+    this.bg =
+      localStorage.getItem("userbg") ||
+      "https://varlet.gitee.io/varlet-ui/cat.jpg";
   },
   methods: {
     refresh() {
@@ -114,6 +119,20 @@ export default {
         this.likewalls = JSON.parse(localStorage.getItem("likewalls")) || [];
         this.isRefresh = false;
       }, 1000);
+    },
+    deletedTo(data) {
+      deleteMess(this.userinfo.id, data.mid)
+        .then((res) => {
+          if (res.success) {
+            Snackbar.success(res.message);
+            this.refreshUser();
+          } else {
+            Snackbar.warning(res.message);
+          }
+        })
+        .finally(() => {
+          this.menu = false;
+        });
     },
     load() {
       this.initData();
@@ -123,8 +142,8 @@ export default {
         this.isRefresh = false;
         if (res.success) {
           this.page++;
-          this.userwalls.push(...res.data.list);
-          if (res.data.list.length == 0) {
+          this.userwalls.push(...res.data.records);
+          if (res.data.records.length == 0) {
             this.finished = true;
           }
         }

@@ -3,7 +3,7 @@
     <div class="form">
       <div class="title">欢迎登陆</div>
       <var-form ref="form">
-        <var-input placeholder="请输入邮箱" v-model="loginData.username" />
+        <var-input placeholder="请输入邮箱" v-model="loginData.email" />
         <var-input
           type="password"
           placeholder="请输入密码"
@@ -28,17 +28,17 @@ export default {
   data() {
     return {
       loginData: {
-        username: "",
+        email: "",
         password: "",
       },
     };
   },
   mounted() {
-    this.loginData.username = localStorage.getItem("username")
+    this.loginData.email = localStorage.getItem("email")
   },
   methods: {
     login() {
-      if (!emailRo.test(this.loginData.username)) {
+      if (!emailRo.test(this.loginData.email)) {
         Snackbar.info("邮箱不规范");
         return;
       }
@@ -47,13 +47,13 @@ export default {
         return;
       }
       let data = {};
-      data.email = this.loginData.username;
+      data.email = this.loginData.email;
       data.password = this.loginData.password;
       data.app = "well";
       loginUser(data)
         .then((res) => {
           // console.log("[ res ] >", res);
-          localStorage.setItem("username",this.loginData.username)
+          localStorage.setItem("email",this.loginData.email)
           if (res.success) {
             setToken(res.data);
             this.$router.push("/me");

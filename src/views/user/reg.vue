@@ -3,7 +3,7 @@
     <div class="form">
       <div class="title">欢迎注册</div>
       <var-form ref="form">
-        <var-input placeholder="请输入邮箱" v-model="regData.username" />
+        <var-input placeholder="请输入邮箱" v-model="regData.email" />
         <var-input
           type="password"
           placeholder="请输入密码(字,数,@$%)"
@@ -12,7 +12,7 @@
         <var-input
           type="password"
           placeholder="请再次输入密码"
-          v-model="regData.repassword"
+          v-model="regData.rePassword"
         />
       </var-form>
       <div class="hint">
@@ -35,31 +35,31 @@ export default {
   data() {
     return {
       regData: {
-        username: "",
+        email: "",
         password: "",
-        repassword: "",
+        rePassword: "",
       },
     };
   },
   methods: {
     reg() {
-      if (!emailRo.test(this.regData.username)) {
+      if (!emailRo.test(this.regData.email)) {
         Snackbar.info("邮箱不规范");
         return;
       }
-      if (!passRo.test(this.regData.password)) {
-        Snackbar.info("密码强度有点低喔");
-        return;
-      }
-      if (this.regData.repassword != this.regData.password) {
+      // if (!passRo.test(this.regData.password)) {
+      //   Snackbar.info("密码强度有点低喔");
+      //   return;
+      // }
+      if (this.regData.rePassword != this.regData.password) {
         Snackbar.info("两次密码不一致");
         return;
       }
       let data = {};
 
-      data.email = this.regData.username;
+      data.email = this.regData.email;
       data.password = this.regData.password;
-      data.rePassword = this.regData.repassword;
+      data.rePassword = this.regData.rePassword;
       
       createUser(data)
         .then((res) => {

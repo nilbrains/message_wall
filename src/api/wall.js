@@ -1,56 +1,86 @@
 import request from '@/plugins/axios'
 import { getToken } from '@/plugins/auth'
 
+//
 export function createWall(data) {
   return request({
-    url: '/wall/wall/add',
+    url: '/wall/create',
     method: 'post',
     data,
     headers: {
-      token: getToken()
-    }
+      auth: getToken(),
+    },
   })
 }
 
-export function wallList(type, cur, key) {
+// 获取列表
+export function wallList(cur, key) {
   return request({
-    url: '/wall/wall/getlist',
+    url: '/wall/list',
     method: 'get',
     params: {
-      type: type || 'new',
-      cur: cur || 1,
+      current: cur || 1,
       key: key || '',
     },
     headers: {
-      token: getToken()
-    }
+      auth: getToken(),
+    },
+  })
+}
+
+export function labelList() {
+  return request({
+    url: '/wall/label',
+    method: 'get',
+    headers: {
+      auth: getToken(),
+    },
+  })
+}
+
+export function label(lid) {
+  return request({
+    url: `/wall/label/${lid}`,
+    method: 'get',
+    headers: {
+      auth: getToken(),
+    },
+  })
+}
+
+export function labelMess(lid, cur) {
+  return request({
+    url: `/wall/label/${lid}/mess`,
+    method: 'get',
+    params: {
+      current: cur || 1,
+    },
+    headers: {
+      auth: getToken(),
+    },
   })
 }
 
 export function wallUserList(uid, cur) {
   return request({
-    url: '/wall/wall/getUserList',
+    url: `/wall/u/${uid}`,
     method: 'get',
     params: {
       uid: uid || '',
-      cur: cur || 1
+      current: cur || 1,
     },
     headers: {
-      token: getToken()
-    }
+      auth: getToken(),
+    },
   })
 }
 
-export function starMessage(uid,id) {
+export function deleteMess(uid, mid) {
   return request({
-    url: '/wall/wall/starMessage',
-    method: 'post',
-    data: {
-      id,
-      uid
-    },
+    url: `/wall/u/${uid}/m/${mid}`,
+    method: 'DELETE',
     headers: {
-      token: getToken()
-    }
+      auth: getToken(),
+    },
   })
 }

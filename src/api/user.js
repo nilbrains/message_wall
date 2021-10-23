@@ -1,27 +1,29 @@
 import { getToken } from '@/plugins/auth'
 import request from '@/plugins/axios'
-
+// 
 export function userinfo() {
   return request({
     url: '/auth/user/info',
     method: 'get',
     headers: {
-      token: getToken()
+      auth: getToken()
     }
   })
 }
 
+// 登录
 export function loginUser(data) {
   return request({
-    url: '/auth/user/login',
+    url: '/auth/login',
     method: 'post',
     data
   })
 }
 
+// 
 export function createUser(data) {
   return request({
-    url: '/auth/user/register',
+    url: '/auth/register',
     method: 'post',
     data
   })
@@ -33,14 +35,14 @@ export function changeUser(data) {
     method: 'post',
     data,
     headers: {
-      token: getToken()
+      auth: getToken()
     }
   })
 }
 
 export function upload(data) {
   return request({
-    url: '/index/index/upload',
+    url: 'https://api.nilbrains.com/index/index/upload',
     method: 'post',
     data,
     headers: {'Content-Type': 'multipart/form-data'},
